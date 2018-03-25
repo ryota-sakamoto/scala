@@ -1,4 +1,4 @@
-mod scala;
+extern crate scala;
 
 use std::num::ParseIntError;
 use scala::util::Either;
