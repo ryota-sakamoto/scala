@@ -7,6 +7,19 @@ pub enum Either<A, B> {
     Right(B),
 }
 
+// TODO
+#[macro_export]
+macro_rules! e_for {
+    ($val:tt <- $function:tt $arg:tt $($val_o:tt <- $f:tt $a:tt)*) => (
+        {
+            $function$arg
+            $(
+                .flat_map(Box::new(|n| $f(n)))
+            )*
+        }
+    );
+}
+
 impl<A, B> Either<A, B> {
     pub fn swap(self) -> Either<B, A> {
         match self {
@@ -62,7 +75,7 @@ impl<A, B> Either<A, B> {
     }
 
     // TODO test
-    pub fn flat_map<'a, A1, B1>(self, f: Box<Fn(B) -> Either<A1, B1>>) -> Box<Either<A1, B1>> {
+    pub fn flat_map<A1, B1>(self, f: Box<Fn(B) -> Either<A1, B1>>) -> Box<Either<A1, B1>> {
         match self {
             Either::Right(r) => Box::new(f(r)),
             _ => unsafe {
