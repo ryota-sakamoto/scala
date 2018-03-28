@@ -62,11 +62,11 @@ impl<A, B> Either<A, B> {
     }
 
     // TODO test
-    pub fn flat_map<'a, A1, B1>(self, f: Box<Fn(B) -> &'a Either<A1, B1>>) -> &'a Either<A1, B1> {
+    pub fn flat_map<'a, A1, B1>(self, f: Box<Fn(B) -> Either<A1, B1>>) -> Box<Either<A1, B1>> {
         match self {
-            Either::Right(r) => f(r),
+            Either::Right(r) => Box::new(f(r)),
             _ => unsafe {
-                transmute::<&Either<A, B>, &Either<A1, B1>>(&self)
+                transmute::<Box<Either<A, B>>, Box<Either<A1, B1>>>(Box::new(self))
             },
         }
     }
