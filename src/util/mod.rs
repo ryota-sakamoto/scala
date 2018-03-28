@@ -21,6 +21,13 @@ macro_rules! e_for {
 }
 
 impl<A, B> Either<A, B> {
+    pub fn parse_result(result: Result<A, B>) -> Either<B, A> {
+        match result {
+            Ok(b) => Either::Right(b),
+            Err(a) => Either::Left(a),
+        }
+    }
+
     pub fn swap(self) -> Either<B, A> {
         match self {
             Either::Left(a) => Either::Right(a),
