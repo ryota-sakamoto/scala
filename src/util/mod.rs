@@ -1,4 +1,5 @@
 use std::cmp::PartialEq;
+use std::mem::transmute;
 
 #[derive(Debug)]
 pub enum Either<A, B> {
@@ -61,12 +62,14 @@ impl<A, B> Either<A, B> {
     }
 
     // TODO test
-    // fn flat_map<A1, B1>(self, f: Box<Fn(B) -> Either<A1, B1>>) -> Either<A1, B1> {
-    //     match self {
-    //         Either::Right(r) => f(r),
-    //         Either::Left(e) => self as Either<A1, B1>,
-    //     }
-    // }
+    pub fn flat_map<'a, A1, B1>(self, f: Box<Fn(B) -> &'a Either<A1, B1>>) -> &'a Either<A1, B1> {
+        match self {
+            Either::Right(r) => f(r),
+            _ => unsafe {
+                transmute::<&Either<A, B>, &Either<A1, B1>>(&self)
+            },
+        }
+    }
 
     pub fn to_option(self) -> Option<B> {
         match self {
