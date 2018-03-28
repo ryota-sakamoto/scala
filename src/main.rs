@@ -6,7 +6,7 @@ use scala::util::Either;
 
 fn main() {
     let result = e_for!{
-        a <- f("1100")
+        _ <- f("1100")
         _ <- f1()
         _ <- f2()
     };
