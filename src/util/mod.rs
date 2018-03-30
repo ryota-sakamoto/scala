@@ -1,5 +1,4 @@
 use std::cmp::PartialEq;
-use std::mem::transmute;
 
 #[derive(Debug)]
 pub enum Either<A, B> {
@@ -14,7 +13,7 @@ macro_rules! e_for {
         {
             $function$arg
             $(
-                .flat_map(Box::new(|n| $f(n)))
+                .flat_map(|n| $f(n))
             )*
         }
     );
@@ -82,12 +81,14 @@ impl<A, B> Either<A, B> {
     }
 
     // TODO test
-    pub fn flat_map<A1, B1>(self, f: Box<Fn(B) -> Either<A1, B1>>) -> Box<Either<A1, B1>> {
+    pub fn flat_map<A1, B1, F>(self, f: F) -> Either<A1, B1>
+    where
+        A1: From<A>,
+        F: Fn(B) -> Either<A1, B1>,
+    {
         match self {
-            Either::Right(r) => Box::new(f(r)),
-            _ => unsafe {
-                transmute::<Box<Either<A, B>>, Box<Either<A1, B1>>>(Box::new(self))
-            },
+            Either::Right(r) => f(r),
+            Either::Left(l) => Either::Left(From::from(l)),
         }
     }
 
@@ -99,17 +100,21 @@ impl<A, B> Either<A, B> {
     }
 }
 
-impl<A, B> PartialEq for Either<A, B> where A: PartialEq, B: PartialEq {
+impl<A, B> PartialEq for Either<A, B>
+where
+    A: PartialEq,
+    B: PartialEq,
+{
     fn eq(&self, other: &Either<A, B>) -> bool {
         let mut result = false;
         if self.is_right() == other.is_right() {
             match (self, other) {
                 (&Either::Left(ref a), &Either::Left(ref a1)) => {
                     result = a == a1;
-                },
+                }
                 (&Either::Right(ref b), &Either::Right(ref b1)) => {
                     result = b == b1;
-                },
+                }
                 _ => {
                     result = false;
                 }
