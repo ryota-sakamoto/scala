@@ -66,7 +66,10 @@ impl<A, B> Either<A, B> {
         }
     }
 
-    pub fn map<B1>(self, f: Box<Fn(B) -> B1>) -> Either<A, B1> {
+    pub fn map<B1, F>(self, f: F) -> Either<A, B1>
+    where
+        F: Fn(B) -> B1,
+    {
         match self {
             Either::Left(a) => Either::Left(a),
             Either::Right(b) => Either::Right(f(b)),

@@ -27,10 +27,10 @@ fn is_left_test() {
 
 #[test]
 fn map_test() {
-    let right = create_right().map(Box::new(|n| n + 1));
+    let right = create_right().map(|n| n + 1);
     assert_eq!(right.get_or_else(0), 1);
 
-    let right = create_right().map(Box::new(|n| n + 1)).map(Box::new(|n| n + 1));
+    let right = create_right().map(|n| n + 1).map(|n| n + 1);
     assert_eq!(right.get_or_else(0), 2);
 }
 
