@@ -13,15 +13,15 @@ fn main() {
 }
 
 fn f(s: &str) -> Either<ParseIntError, u64> {
-    Either::parse_result(s.parse())
+    s.parse().into()
 }
 
 fn f1(n: u64) -> Either<ParseIntError, u8> {
-    Either::parse_result(format!("{}", n).parse())
+    format!("{}", n).parse().into()
 }
 
 fn f2(n: u8) -> Either<ParseIntError, u64> {
-    Either::parse_result(format!("{}", n).parse())
+    format!("{}", n).parse().into()
 }
 
 fn e1(n: u64) -> Either<String, String> {

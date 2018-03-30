@@ -20,13 +20,6 @@ macro_rules! e_for {
 }
 
 impl<A, B> Either<A, B> {
-    pub fn parse_result(result: Result<A, B>) -> Either<B, A> {
-        match result {
-            Ok(b) => Either::Right(b),
-            Err(a) => Either::Left(a),
-        }
-    }
-
     pub fn swap(self) -> Either<B, A> {
         match self {
             Either::Left(a) => Either::Right(a),
@@ -121,5 +114,18 @@ where
             }
         }
         result
+    }
+}
+
+/*
+* Either::from(Result<B, A>) -> Either<A, B>
+* (Result<B, A>).into() -> Either<A, B>
+*/
+impl<A, B> From<Result<B, A>> for Either<A, B> {
+    fn from(from: Result<B, A>) -> Self {
+        match from {
+            Ok(a) => Either::Right(a),
+            Err(b) => Either::Left(b),
+        }
     }
 }
