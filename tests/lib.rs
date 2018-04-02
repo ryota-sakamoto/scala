@@ -21,6 +21,12 @@ fn contains_test() {
 }
 
 #[test]
+fn for_each_test() {
+    let right = create_right();
+    right.for_each(|n| assert_eq!(n, 0));
+}
+
+#[test]
 fn is_right_test() {
     let right = create_right();
     assert!(right.is_right());

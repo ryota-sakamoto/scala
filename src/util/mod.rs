@@ -27,8 +27,10 @@ impl<A, B> Either<A, B> {
         }
     }
 
-    // TODO test
-    pub fn for_each<U>(self, f: Box<Fn(B) -> U>) {
+    pub fn for_each<F, U>(self, f: F)
+    where
+        F: Fn(B) -> U,
+    {
         match self {
             Either::Right(b) => {
                 f(b);
