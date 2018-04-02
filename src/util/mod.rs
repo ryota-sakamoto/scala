@@ -51,10 +51,12 @@ impl<A, B> Either<A, B> {
         }
     }
 
-    // TODO test
-    pub fn contains(self, f: Box<Fn(B) -> bool>) -> bool {
+    pub fn contains<F>(&self, f: F) -> bool
+    where 
+        F: Fn(&B) -> bool
+    {
         match self {
-            Either::Right(b) => f(b),
+            &Either::Right(ref b) => f(b),
             _ => false,
         }
     }

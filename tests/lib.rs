@@ -12,6 +12,15 @@ fn swap_test() {
 }
 
 #[test]
+fn contains_test() {
+    let right = create_right();
+    assert!(right.contains(|n| *n == 0));
+
+    let left = create_left();
+    assert!(!left.contains(|_| true));
+}
+
+#[test]
 fn is_right_test() {
     let right = create_right();
     assert!(right.is_right());
